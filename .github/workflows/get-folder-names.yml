@@ -1,0 +1,27 @@
+name: Get Folder Names
+on: [push]
+
+jobs:
+  get-names:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+    - name: Get qBittorrent version
+      id: qbt_version
+      run: |
+        cd patches/qbittorrent
+        qbt_v=$(ls -d */ | cut -f1 -d'/')
+        echo "::set-output name=qbt_version::$qbt_v"
+    - name: Get libtorrent version
+      id: lib_version
+      run: |
+        cd patches/libtorrent
+        lib_v=$(ls -d */ | cut -f1 -d'/')
+        echo "::set-output name=lib_version::$lib_v"
+    - name: Print versions
+      run: |
+        echo "qBittorrent version: ${{ steps.qbt_version.outputs.qbt_version }}"
+        echo "libtorrent version: ${{ steps.lib_version.outputs.lib_version }}"
